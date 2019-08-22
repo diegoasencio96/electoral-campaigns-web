@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres
+    container_name: database
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: campaigns_db
+    restart: always
+  web:
+    build: ./src
+    container_name: backend
+    command: python manage.py runserver 0.0.0.0:80 --settings=monolith.settings.develop
+    volumes:
+      - .:/code
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  db-data:
+    driver: local

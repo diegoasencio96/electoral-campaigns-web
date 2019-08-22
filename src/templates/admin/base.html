@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+{% load i18n admin_static suit_tags %}
+
+{% block extrahead %}
+{{ block.super }}
+<script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900' rel='stylesheet' type='text/css'>
+    <link href='{% static "suit/css/font-awesome.min.css" %}' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/favicon.ico">
+{% endblock %}
+
+
+{% block branding %}
+<div align=center>
+    <a href=""><h1 id="site-name" style="color: #fff;">ADMINISTRACIÓN CAMPAÑA ELECTORAL</h1></a><br>
+</div>
+{% endblock %}
+
+{% block welcome-msg %}
+    <span class="welcome">
+        {% trans 'Welcome,' %}
+        <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+    </span>
+{% endblock %}
+
+
+{% block title %}{{ _('PANEL DE ADMINISTRACIÓN') }} | {{ _('CAMPAÑA ELECTORAL') }}{% endblock %}
+
+{% block footer_links %}
+    Soporte: <a href="mailto:soporte@diegoasencio.co" target="_blank">soporte@diegoasencio.co</a>
+{% endblock %}
+
+{% block copyright %}
+    SIGCE v1.0.0 - Sistema de Información para Administración y Gestion de Campañas Electorales
+    <span class="hidden-md-down"></span>
+    <br>Desarrollado por <a href="www.diegoasencio.co" target="_blank">Simplex CE</a>.
+    <br>Todos los derechos reservados - 2019
+{% endblock %}
