@@ -31,12 +31,28 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'monolith.apps.SuitConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'modules.users.apps.UsersConfig',
+    'modules.campaigns.apps.CampaignsConfig',
+    'modules.locations.apps.LocationsConfig',
+    'modules.configurations.apps.ConfigurationsConfig',
+    'import_export',
+    'django_cleanup',
+    'mptt',
+    'django_mptt_admin',
+    'adminsortable2',
+    'geoposition',
+    'corsheaders',
+    'smart_selects',
+    'rest_framework',
+    'rest_framework_gis',
+    'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +70,7 @@ ROOT_URLCONF = 'monolith.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, '../templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,4 +122,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+USE_DJANGO_JQUERY = True
+
+AUTH_USER_MODEL = 'users.User'
