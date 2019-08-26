@@ -1,6 +1,6 @@
 from .base import *
 
-ALLOWED_HOSTS += ['localhost', '127.0.0.1', '68.183.62.143']
+ALLOWED_HOSTS += ['localhost', '127.0.0.1', '68.183.62.143', 'campaigns.diegoasencio.co']
 
 INSTALLED_APPS += []
 
