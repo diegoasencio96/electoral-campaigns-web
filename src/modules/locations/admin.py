@@ -24,6 +24,7 @@ class RegionAdmin(admin.ModelAdmin):
     list_display = ('name', 'country')
     list_filter = ('country', )
     search_fields = ('name', 'country__name')
+    autocomplete_fields = ['country']
     fieldsets = (
         (None, {
             'classes': ('suit-tab suit-tab-general',),
@@ -40,6 +41,7 @@ class CityAdmin(admin.ModelAdmin):
     list_display = ('name', 'state')
     list_filter = ('state', )
     search_fields = ('name', 'state__name')
+    autocomplete_fields = ['state']
     fieldsets = (
         (None, {
             'classes': ('suit-tab suit-tab-general',),
@@ -56,6 +58,7 @@ class ZoneAdmin(admin.ModelAdmin):
     list_display = ('name', 'city')
     search_fields = ('name', 'city__name')
     list_filter = ('city',)
+    autocomplete_fields = ['city']
     fieldsets = (
         (None, {
             'classes': ('suit-tab suit-tab-general',),
@@ -72,6 +75,7 @@ class NeighborhoodAdmin(admin.ModelAdmin):
     list_display = ('name', 'zone_type')
     search_fields = ('name', 'zone_type__name')
     list_filter = ('zone_type',)
+    autocomplete_fields = ['zone_type']
     fieldsets = (
         (None, {
             'classes': ('suit-tab suit-tab-general',),
@@ -88,6 +92,7 @@ class VotingPostAdmin(admin.ModelAdmin):
     list_display = ('name', 'sector')
     search_fields = ('name', 'sector__name')
     list_filter = ('sector',)
+    autocomplete_fields = ['sector']
     fieldsets = (
         (None, {
             'classes': ('suit-tab suit-tab-general',),

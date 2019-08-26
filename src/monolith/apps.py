@@ -22,7 +22,7 @@ class SuitConfig(DjangoSuitConfig):
             ChildItem(model='locations.neighborhood'),
             ChildItem(model='locations.votingpost'),
         ]),
-        ParentItem('Usuarios', icon='fa fa-user', children=[
+        ParentItem('Clientes', icon='fa fa-user', children=[
             ChildItem(model='users.user'),
             ChildItem(model='auth.group'),
         ]),

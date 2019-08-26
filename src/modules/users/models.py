@@ -1,6 +1,7 @@
 from django.db import models
 from ..campaigns.models import Campaign
 from django.contrib.auth.models import AbstractUser
+from ..locations.models import Country
 
 
 class User(AbstractUser):
@@ -10,6 +11,8 @@ class User(AbstractUser):
     birth_date = models.DateField(verbose_name='Fecha de nacimiento', null=True, blank=True)
     campaign = models.ForeignKey(Campaign, verbose_name='Campaña o candidatura',
                                  null=True, blank=True, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, verbose_name='País', null=True, blank=True, on_delete=models.CASCADE)
+
 
     class Meta:
         verbose_name = 'Usuario'
@@ -19,6 +22,12 @@ class User(AbstractUser):
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
+        return '{} {}'.format(self.first_name, self.last_name)
+
+    def get_short_name(self):
+        return self.first_name
+
+    def get_full_name(self):
         return '{} {}'.format(self.first_name, self.last_name)
 
 

@@ -13,17 +13,27 @@ services:
       POSTGRES_PASSWORD: docker
       POSTGRES_DB: campaigns_db
     restart: always
+
   web:
     build: ./src
     container_name: backend
-    entrypoint: /docker-entrypoint.sh
     volumes:
-      - .:/code
-    ports:
-      - "80:80"
+      - ./src/:/code/
     depends_on:
       - db
     restart: always
+
+  nginx:
+    restart: always
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./src/monolith/static:/code/static
+      - ./src/monolith/media:/code/media
+      - ./config/nginx/conf/campaigns.conf:/etc/nginx/conf.d/campaigns.conf
+    depends_on:
+      - web
 
 volumes:
   db-data:

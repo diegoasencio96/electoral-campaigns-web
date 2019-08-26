@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import Meeting, ListPeople, Person, TypeMeeting, CampaignCharge, Campaign
 from django_mptt_admin.admin import DjangoMpttAdmin
+from .forms import MeetingForm
+
 # Register your models here.
 
 
@@ -14,6 +16,7 @@ class PersonAdmin(DjangoMpttAdmin):
     # raw_id_fields = ('assistant', )
     suit_list_filter_horizontal = ('campaign_charge', 'parent')
     search_fields = ('first_name', 'last_name', 'identification_card', 'cellphone', 'email', 'address')
+    autocomplete_fields = ['campaign_charge', 'parent', 'country', 'state', 'city', 'zone', 'sector', 'voting_post']
     fieldsets = (
         (None, {
             'classes': ('suit-tab suit-tab-general',),
@@ -40,37 +43,32 @@ class PersonAdmin(DjangoMpttAdmin):
         ('voting-data', 'Datos de votación'),
     )
 
+    def save_model(self, request, obj, form, change):
+        if getattr(obj, 'campaign', None) is None:
+            obj.campaign = request.user.campaign
+        obj.save()
+
     def get_queryset(self, request):
         queryset = super(__class__, self).get_queryset(request)
-        return queryset.all()
+        if request.user.is_superuser:
+            return queryset
+        return queryset.filter(campaign=request.user.campaign)
 
 
 class SurveyedInline(admin.TabularInline):
     model = Person.list_people.through
     extra = 1
     suit_classes = 'suit-tab suit-tab-list'
-
-
-class ListPeopleAdmin(admin.ModelAdmin):
-    inlines = [SurveyedInline]
-    fieldsets = (
-        (None, {
-            'classes': ('suit-tab suit-tab-general',),
-            'fields': (
-                'id_list', 'date', 'country', 'state', 'city', 'ubication')
-        }),
-    )
-
-    suit_form_tabs = (
-        ('general', 'Planilla'),
-        ('list', 'Listado de personas'),
-    )
+    autocomplete_fields = ['person', 'meeting']
 
 
 @admin.register(Meeting)
 class MeetingAdmin(admin.ModelAdmin):
+    form = MeetingForm
     list_display = ('id', 'candidature', 'date', 'start_time', 'end_time')
     list_filter = ('type_activity',)
+    search_fields = ('name', 'type_activity__name', 'candidature__name', 'date')
+    autocomplete_fields = ['type_activity', 'country', 'state', 'city', 'zone', 'sector']
     fieldsets = (
         (None, {
             'classes': ('suit-tab suit-tab-general',),
@@ -87,7 +85,7 @@ class MeetingAdmin(admin.ModelAdmin):
         queryset = super(__class__, self).get_queryset(request)
         if request.user.is_superuser:
             return queryset
-        return queryset # .filter(user=request.user)
+        return queryset.filter(candidature=request.user.campaign)
 
     def save_model(self, request, obj, form, change):
         if getattr(obj, 'candidature', None) is None:
@@ -95,7 +93,83 @@ class MeetingAdmin(admin.ModelAdmin):
         obj.save()
 
 
-admin.site.register(ListPeople, ListPeopleAdmin)
-admin.site.register(TypeMeeting)
-admin.site.register(CampaignCharge)
-admin.site.register(Campaign)
+@admin.register(Campaign)
+class CampaignAdmin(admin.ModelAdmin):
+    list_display = ('name', 'number', 'political_party')
+    search_fields = ('name', 'number', 'political_party__name')
+    autocomplete_fields = ['political_party']
+
+    def get_queryset(self, request):
+        queryset = super(__class__, self).get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        return queryset.filter(id=request.user.campaign)
+
+
+@admin.register(CampaignCharge)
+class CampaignChargeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'parent')
+    search_fields = ('name', 'campaign', 'parent__name')
+    exclude = ('campaign', )
+    autocomplete_fields = ['parent']
+
+    def save_model(self, request, obj, form, change):
+        if getattr(obj, 'campaign', None) is None:
+            obj.campaign = request.user.campaign
+        obj.save()
+
+    def get_queryset(self, request):
+        queryset = super(__class__, self).get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        return queryset.filter(campaign=request.user.campaign)
+
+
+@admin.register(TypeMeeting)
+class TypeMeetignAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name', 'campaign',)
+    exclude = ('campaign', )
+
+    def save_model(self, request, obj, form, change):
+        if getattr(obj, 'campaign', None) is None:
+            obj.campaign = request.user.campaign
+        obj.save()
+
+    def get_queryset(self, request):
+        queryset = super(__class__, self).get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        return queryset.filter(campaign=request.user.campaign)
+
+
+@admin.register(ListPeople)
+class ListPeopleAdmin(admin.ModelAdmin):
+    list_display = ('id_list', 'date', 'country', 'state', 'city', 'ubication')
+    search_fields = ('id_list', 'date', 'country__name', 'state__name', 'city__name', 'ubication')
+    exclude = ('campaign', )
+    autocomplete_fields = ['country', 'state', 'city']
+    inlines = [SurveyedInline]
+    fieldsets = (
+        (None, {
+            'classes': ('suit-tab suit-tab-general',),
+            'fields': (
+                'id_list', 'date', 'country', 'state', 'city', 'ubication')
+        }),
+    )
+
+    suit_form_tabs = (
+        ('general', 'Planilla'),
+        ('list', 'Listado de personas'),
+    )
+
+    def save_model(self, request, obj, form, change):
+        if getattr(obj, 'campaign', None) is None:
+            obj.campaign = request.user.campaign
+        obj.save()
+
+    def get_queryset(self, request):
+        queryset = super(__class__, self).get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        return queryset.filter(campaign=request.user.campaign)
