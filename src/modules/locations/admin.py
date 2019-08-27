@@ -1,11 +1,11 @@
 from django.contrib import admin
 from .models import Country, Region, City, Zone, Neighborhood, VotingPost
-
+from import_export.admin import ImportExportModelAdmin
 
 # Register your models here.
 
 @admin.register(Country)
-class CountryAdmin(admin.ModelAdmin):
+class CountryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'alfa_two', 'alfa_three', 'phone_code', 'icon')
     search_fields = ('name', 'alfa_two', 'alfa_three')
     fieldsets = (
@@ -20,7 +20,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Region)
-class RegionAdmin(admin.ModelAdmin):
+class RegionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'country')
     list_filter = ('country', )
     search_fields = ('name', 'country__name')
@@ -37,7 +37,7 @@ class RegionAdmin(admin.ModelAdmin):
 
 
 @admin.register(City)
-class CityAdmin(admin.ModelAdmin):
+class CityAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'state')
     list_filter = ('state', )
     search_fields = ('name', 'state__name')
@@ -54,7 +54,7 @@ class CityAdmin(admin.ModelAdmin):
 
 
 @admin.register(Zone)
-class ZoneAdmin(admin.ModelAdmin):
+class ZoneAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'city')
     search_fields = ('name', 'city__name')
     list_filter = ('city',)
@@ -71,7 +71,7 @@ class ZoneAdmin(admin.ModelAdmin):
 
 
 @admin.register(Neighborhood)
-class NeighborhoodAdmin(admin.ModelAdmin):
+class NeighborhoodAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'zone_type')
     search_fields = ('name', 'zone_type__name')
     list_filter = ('zone_type',)
@@ -88,7 +88,7 @@ class NeighborhoodAdmin(admin.ModelAdmin):
 
 
 @admin.register(VotingPost)
-class VotingPostAdmin(admin.ModelAdmin):
+class VotingPostAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'sector')
     search_fields = ('name', 'sector__name')
     list_filter = ('sector',)

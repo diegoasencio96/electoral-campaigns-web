@@ -1,10 +1,12 @@
 from django.contrib import admin
 from .models import PoliticalParty
+from import_export.admin import ImportExportModelAdmin
+
 # Register your models here.
 
 
 @admin.register(PoliticalParty)
-class PoliticalPartyAdmin(admin.ModelAdmin):
+class PoliticalPartyAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 

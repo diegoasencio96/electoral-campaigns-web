@@ -1,13 +1,15 @@
 from django.contrib import admin
 from .models import Meeting, ListPeople, Person, TypeMeeting, CampaignCharge, Campaign
 from django_mptt_admin.admin import DjangoMpttAdmin
+from import_export.admin import ImportExportModelAdmin
 from .forms import MeetingForm
+
 
 # Register your models here.
 
 
 @admin.register(Person)
-class PersonAdmin(DjangoMpttAdmin):
+class PersonAdmin(ImportExportModelAdmin):
     # resource_class = PersonResource
     # form = PersonForm
     list_display = ('first_name', 'last_name', 'sex', 'identification_card', 'cellphone', 'email', 'is_voter',
@@ -63,7 +65,7 @@ class SurveyedInline(admin.TabularInline):
 
 
 @admin.register(Meeting)
-class MeetingAdmin(admin.ModelAdmin):
+class MeetingAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     form = MeetingForm
     list_display = ('id', 'candidature', 'date', 'start_time', 'end_time')
     list_filter = ('type_activity',)
@@ -94,7 +96,7 @@ class MeetingAdmin(admin.ModelAdmin):
 
 
 @admin.register(Campaign)
-class CampaignAdmin(admin.ModelAdmin):
+class CampaignAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'number', 'political_party')
     search_fields = ('name', 'number', 'political_party__name')
     autocomplete_fields = ['political_party']
@@ -107,7 +109,7 @@ class CampaignAdmin(admin.ModelAdmin):
 
 
 @admin.register(CampaignCharge)
-class CampaignChargeAdmin(admin.ModelAdmin):
+class CampaignChargeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'parent')
     search_fields = ('name', 'campaign', 'parent__name')
     exclude = ('campaign', )
@@ -126,7 +128,7 @@ class CampaignChargeAdmin(admin.ModelAdmin):
 
 
 @admin.register(TypeMeeting)
-class TypeMeetignAdmin(admin.ModelAdmin):
+class TypeMeetignAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name', 'campaign',)
     exclude = ('campaign', )
@@ -144,7 +146,7 @@ class TypeMeetignAdmin(admin.ModelAdmin):
 
 
 @admin.register(ListPeople)
-class ListPeopleAdmin(admin.ModelAdmin):
+class ListPeopleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('id_list', 'date', 'country', 'state', 'city', 'ubication')
     search_fields = ('id_list', 'date', 'country__name', 'state__name', 'city__name', 'ubication')
     exclude = ('campaign', )
