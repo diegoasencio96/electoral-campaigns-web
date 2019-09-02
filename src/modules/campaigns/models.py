@@ -102,18 +102,19 @@ class Meeting(models.Model):
         super(Meeting, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '{} | {}'.format(self.name, self.type_activity)
+        return '{}'.format(self.sector)
 
 
 class ListPeople(models.Model):
     campaign = models.ForeignKey(Campaign, verbose_name='Campaña o candidatura',
                                  null=True, blank=True, on_delete=models.CASCADE)
-    id_list = models.PositiveIntegerField(verbose_name='Número de la planilla', null=False, blank=False)
+    id_list = models.PositiveIntegerField(verbose_name='Número de la planilla', null=True, blank=True)
     date = models.DateField(verbose_name='Fecha de la planilla', default=timezone.now)
     country = models.ForeignKey(Country, verbose_name='País', on_delete=models.CASCADE)
     state = ChainedForeignKey(Region, verbose_name='Departamento', chained_field='country', chained_model_field='country',
                               show_all=False, auto_choose=True)
     city = ChainedForeignKey(City, verbose_name='Municipio', chained_field='state', chained_model_field='state')
+    zone = ChainedForeignKey(Zone, verbose_name='Zona o comuna', chained_field='city', chained_model_field='city')
     ubication = models.CharField(verbose_name='Ubicación', max_length=200, null=True, blank=True)
 
     class Meta:
@@ -124,7 +125,7 @@ class ListPeople(models.Model):
         super(ListPeople, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '{}'.format(self.id_list)
+        return '{}'.format(self.zone)
 
 
 class Person(MPTTModel):
@@ -179,6 +180,7 @@ class Surveyed(models.Model):
     class Meta:
         verbose_name = 'Encuestado'
         verbose_name_plural = 'Encuestados'
+        unique_together = ('person', 'list_people',)
 
     def save(self, *args, **kwargs):
         super(Surveyed, self).save(*args, **kwargs)

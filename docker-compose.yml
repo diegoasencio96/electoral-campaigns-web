@@ -16,11 +16,14 @@ services:
 
   web:
     build: ./src
+    entrypoint: ['/docker-entrypoint.sh']
     container_name: backend
+    image: campaign-image
     volumes:
       - ./src/:/code/
     depends_on:
       - db
+      - redis
     restart: always
 
   nginx:
@@ -34,6 +37,48 @@ services:
       - ./config/nginx/conf/campaigns.conf:/etc/nginx/conf.d/campaigns.conf
     depends_on:
       - web
+
+
+  redis:
+    restart: always
+    container_name: redis
+    image: redis:latest
+    ports:
+     - '6378:6379'
+
+  celery:
+    image: campaign-image
+    container_name: celery
+    command: bash -c "cd code && celery -A monolith worker -l info"
+    volumes:
+      - ./src/:/code/
+    depends_on:
+      - web
+      - db
+      - redis
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+
+  celery-beat:
+    container_name: celery-beat
+    image: campaign-image
+    command: bash -c "cd code && celery -A monolith beat -l info --pidfile=/tmp/celerybeat.pid"
+    volumes:
+      - ./src/:/code/
+    depends_on:
+      - web
+      - db
+      - redis
+
 
 volumes:
   db-data:

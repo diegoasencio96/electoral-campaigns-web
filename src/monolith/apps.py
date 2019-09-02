@@ -10,6 +10,7 @@ class SuitConfig(DjangoSuitConfig):
             ChildItem(model='campaigns.campaign'),
             ChildItem(model='campaigns.meeting'),
             ChildItem(model='campaigns.listpeople'),
+            ChildItem(model='campaigns.surveyed'),
             ChildItem(model='campaigns.person'),
             ChildItem(model='campaigns.typemeeting'),
             ChildItem(model='campaigns.campaigncharge'),

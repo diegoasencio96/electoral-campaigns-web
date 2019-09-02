@@ -29,7 +29,7 @@ class Region(models.Model):
         verbose_name_plural = 'Departamentos'
 
     def __str__(self):
-        return '{}-{}'.format(self.country.name, self.name)
+        return '{} | {}'.format(self.country.name, self.name)
 
 
 class City(models.Model):
@@ -41,7 +41,7 @@ class City(models.Model):
         verbose_name_plural = 'Municipios'
 
     def __str__(self):
-        return '{}-{}-{}'.format(self.state.country.name, self.state.name, self.name)
+        return '{} | {} | {}'.format(self.state.country.name, self.state.name, self.name)
 
     def save(self, *args, **kwargs):
         super(City, self).save(*args, **kwargs)
@@ -56,7 +56,7 @@ class Zone(models.Model):
         verbose_name_plural = 'Zonas'
 
     def __str__(self):
-        return '{}-{}-{}-{}'.format(self.city.state.country.name, self.city.state.name, self.city.name, self.name)
+        return '{} | {} | {} | {}'.format(self.city.state.country.name, self.city.state.name, self.city.name, self.name)
 
 
 class Neighborhood(models.Model):
@@ -68,7 +68,7 @@ class Neighborhood(models.Model):
         verbose_name_plural = 'Sectores'
 
     def __str__(self):
-        return '{}-{}-{}-{}-{}'.format(self.zone_type.city.state.country.name, self.zone_type.city.state.name,
+        return '{} | {} | {} | {} | {}'.format(self.zone_type.city.state.country.name, self.zone_type.city.state.name,
                                                self.zone_type.city.name, self.zone_type.name, self.name)
 
 
@@ -81,6 +81,6 @@ class VotingPost(models.Model):
         verbose_name_plural = 'Puestos de votaciones'
 
     def __str__(self):
-        return '{}-{}-{}-{}-{}-{}'.format(self.sector.zone_type.city.state.country.name, self.sector.zone_type.city.state.name,
+        return '{} | {} | {} | {} | {} | {}'.format(self.sector.zone_type.city.state.country.name, self.sector.zone_type.city.state.name,
                                                self.sector.zone_type.city.name, self.sector.zone_type.name, self.sector.name, self.name)
 
