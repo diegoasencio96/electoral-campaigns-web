@@ -3,8 +3,8 @@
 python /code/manage.py makemigrations --settings=monolith.settings.production
 python /code/manage.py migrate --settings=monolith.settings.production            # Apply database migrations
 python /code/manage.py collectstatic --noinput --settings=monolith.settings.production  # Collect static files
-python /code/manage.py loaddata /code/fixtures/auth.json --settings=monolith.settings.production
-python /code/manage.py loaddata /code/fixtures/users.json --settings=monolith.settings.production
+#python /code/manage.py loaddata /code/fixtures/auth.json --settings=monolith.settings.production
+#python /code/manage.py loaddata /code/fixtures/users.json --settings=monolith.settings.production
 
 #rm /code/celeryev.pid
 
