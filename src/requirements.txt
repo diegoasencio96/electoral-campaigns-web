@@ -24,7 +24,7 @@ django-progressbarupload==0.1.7
 django-rest-swagger==2.2.0
 git+https://github.com/digi604/django-smart-selects.git@js-unlinting-fixes
 https://github.com/darklow/django-suit/tarball/v2
-djangorestframework==3.10.2
+djangorestframework==3.11.2
 djangorestframework-gis==0.14
 djangorestframework-jwt==1.11.0
 et-xmlfile==1.0.1
